@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2022-11-12 19:58:17
--- 伺服器版本： 10.4.24-MariaDB
--- PHP 版本： 8.1.6
+-- 產生時間： 2023-01-03 11:21:08
+-- 伺服器版本： 10.4.27-MariaDB
+-- PHP 版本： 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,17 +32,17 @@ CREATE TABLE `administer` (
   `name` varchar(10) DEFAULT NULL,
   `Password` varchar(8) DEFAULT NULL,
   `email` varchar(12) DEFAULT NULL,
-  `phone` varchar(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `phone` varchar(13) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- 傾印資料表的資料 `administer`
 --
 
 INSERT INTO `administer` (`Administer_ID`, `name`, `Password`, `email`, `phone`) VALUES
-('1', 'TY', '1234', 'TY@email.com', '987654321'),
-('2', 'YH', '1234', 'YH@email.com', '987654321'),
-('3', 'PH', '1234', 'PH@email.com', '987654321');
+('1', 'TY', '1234', 'TY@email.com', '0912345678'),
+('2', 'YH', '1234', 'YH@email.com', '0912121212'),
+('3', 'PH', '1234', 'PH@email.com', '0921212121');
 
 -- --------------------------------------------------------
 
@@ -57,7 +57,7 @@ CREATE TABLE `book` (
   `Status` varchar(9) DEFAULT NULL,
   `Year` varchar(10) DEFAULT NULL,
   `Price` varchar(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- 傾印資料表的資料 `book`
@@ -66,7 +66,7 @@ CREATE TABLE `book` (
 INSERT INTO `book` (`Book_ID`, `BookName`, `Author`, `Status`, `Year`, `Price`) VALUES
 ('1', '10-Day Green Smoothie Cleanse', 'JJ Smith', 'issued', '2016', '8'),
 ('10', 'A Man Called Ove: A Novel', 'Fredrik Backman', 'issued', '2016', '8'),
-('100', 'Enchanted Forest: An Inky Quest and Coloring book (Activity Books, Mindfulness and Meditation, Illustrated Floral Prints?K', 'Johanna Basford', 'available', '2015', '9'),
+('100', 'Enchanted Forest: An Inky Quest and Coloring book (Activity Books, Mindfulness and Meditation)', 'Johanna Basford', 'available', '2015', '9'),
 ('101', 'Fahrenheit 451', 'Ray Bradbury', 'available', '2016', '8'),
 ('102', 'Fahrenheit 451', 'Ray Bradbury', 'available', '2018', '8'),
 ('103', 'Fantastic Beasts and Where to Find Them: The Original Screenplay (Harry Potter)', 'J.K. Rowling', 'issued', '2016', '15'),
@@ -566,7 +566,7 @@ INSERT INTO `book` (`Book_ID`, `BookName`, `Author`, `Status`, `Year`, `Price`) 
 ('548', 'You Are a Badass: How to Stop Doubting Your Greatness and Start Living an Awesome Life', 'Jen Sincero', 'available', '2017', '8'),
 ('549', 'You Are a Badass: How to Stop Doubting Your Greatness and Start Living an Awesome Life', 'Jen Sincero', 'available', '2018', '8'),
 ('55', 'Creative Haven Creative Cats Coloring Book (Adult Coloring)', 'Marjorie Sarnat', 'available', '2015', '4'),
-('550', 'You Are a Badass: How to Stop Doubting Your Greatness and Start Living an Awesome Life', 'Jen Sincero', 'issued', '2019', '8'),
+('550', 'You Are a Badass: How to Stop Doubting Your Greatness and Start Living an Awesome Life', 'Jen Sincero', 'available', '2019', '8'),
 ('56', 'Creative Haven Owls Coloring Book (Adult Coloring)', 'Marjorie Sarnat', 'available', '2015', '5'),
 ('57', 'Cutting for Stone', 'Abraham Verghese', 'available', '2010', '11'),
 ('58', 'Cutting for Stone', 'Abraham Verghese', 'available', '2011', '11'),
@@ -616,6 +616,18 @@ INSERT INTO `book` (`Book_ID`, `BookName`, `Author`, `Status`, `Year`, `Price`) 
 ('98', 'Educated: A Memoir', 'Tara Westover', 'available', '2018', '15'),
 ('99', 'Educated: A Memoir', 'Tara Westover', 'available', '2019', '15');
 
+--
+-- 觸發器 `book`
+--
+DELIMITER $$
+CREATE TRIGGER `UpdateBook` AFTER UPDATE ON `book` FOR EACH ROW BEGIN 
+UPDATE final_project.book
+SET final_project.book.Price = OLD.book.Price
+where new.book.Price < 1;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -629,7 +641,7 @@ CREATE TABLE `process` (
   `Administer_ID` varchar(100) NOT NULL,
   `Date` varchar(10) DEFAULT NULL,
   `Type` varchar(9) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- 傾印資料表的資料 `process`
@@ -641,7 +653,10 @@ INSERT INTO `process` (`Process_ID`, `Reader_ID`, `Book_ID`, `Administer_ID`, `D
 ('3', '3', '300', '1', '2022/10/3', 'borrow'),
 ('4', '1', '550', '2', '2022/10/4', 'borrow'),
 ('5', '2', '100', '3', '2022/10/7', 'return'),
-('6', '2', '200', '2', '2022/10/7', 'return');
+('6', '2', '200', '2', '2022/10/7', 'return'),
+('7', '1', '101', '1', '2023/01/03', 'borrow'),
+('8', '1', '101', '1', '2023/01/03', 'return'),
+('9', '1', '550', '1', '2023/01/03', 'return');
 
 -- --------------------------------------------------------
 
@@ -655,19 +670,47 @@ CREATE TABLE `reader` (
   `Password` varchar(8) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `phone` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- 傾印資料表的資料 `reader`
 --
 
 INSERT INTO `reader` (`Reader_ID`, `Name`, `Password`, `email`, `phone`) VALUES
-('1', 'TY', '1234', '', ''),
-('2', 'Horford', '2330', '', ''),
-('3', 'IronMan', '3000', '', ''),
-('4', 'Leonard', '4321', '', ''),
-('5', 'Jessy', '5678', '', ''),
-('6', 'Sherry', '8765', '', '');
+('1', 'TY', '1234', 'TY@mail.com', '0987654321'),
+('2', 'Horford', '2330', 'Horford@mail.com', '0911111111'),
+('3', 'IronMan', '3000', 'IronMan@mail.com', '095555555'),
+('4', 'Leonard', '4321', 'Leonard@mail.com', '092222222'),
+('5', 'Jessy', '5678', 'Jessy@mail.com', '093333333'),
+('6', 'Sherry', '8765', 'Sherry@mail.com', '094444444');
+
+-- --------------------------------------------------------
+
+--
+-- 替換檢視表以便查看 `record`
+-- (請參考以下實際畫面)
+--
+CREATE TABLE `record` (
+`Reader_ID` varchar(9)
+,`Name` varchar(7)
+,`Password` varchar(8)
+,`email` varchar(100)
+,`phone` varchar(15)
+,`Process_ID` varchar(10)
+,`Book_ID` varchar(10)
+,`Administer_ID` varchar(100)
+,`Date` varchar(10)
+,`Type` varchar(9)
+);
+
+-- --------------------------------------------------------
+
+--
+-- 檢視表結構 `record`
+--
+DROP TABLE IF EXISTS `record`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `record`  AS SELECT `reader`.`Reader_ID` AS `Reader_ID`, `reader`.`Name` AS `Name`, `reader`.`Password` AS `Password`, `reader`.`email` AS `email`, `reader`.`phone` AS `phone`, `process`.`Process_ID` AS `Process_ID`, `process`.`Book_ID` AS `Book_ID`, `process`.`Administer_ID` AS `Administer_ID`, `process`.`Date` AS `Date`, `process`.`Type` AS `Type` FROM (`reader` join `process` on(`reader`.`Reader_ID` = `process`.`Reader_ID`))  ;
 
 --
 -- 已傾印資料表的索引
