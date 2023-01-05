@@ -1,172 +1,65 @@
 <html>
 	<head>
 		<title> Database System Admin Page </title>
+        <!--Bootstrap-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
 	</head>
 	
-	<body>	
-        <h1>Admin Page</h1>	
-    <p> By <font size="5"> <strong> CCC team </strong> </font></p>
-    <hr>
-    <!-- search -->
-    <form  action=/admin/process/db_search.php method="post">
-        <?php
-            echo "This is for search.<br/>";
-        ?>
-        <div>
-            <label><font size="3"> <strong>Book_ID :</strong> </font></label>
-            <input type="text" name="Book_ID" />
-        </div><br/>
-        
-        <div>
-            <label><font size="3"> <strong>BookName :</strong> </font></label>
-            <input type="text" name="BookName"><br/>
-        </div><br/>
-
-        <div>
-            <label><font size="3"> <strong>Author :</strong> </font></label>
-            <input type="text" name="Author"><br/>
-        </div><br/>
-        <div>
-            <label><font size="3"> <strong>Status :</strong> </font></label>
-            <select name="Status">
-                <option value = unknown> unknown</option>
-                <option value = "available">available</option>
-                <option value = "issued">issued</option>
-            </select>
-        </div><br/>
-        
-        <div>
-            <label><font size="3"> <strong>Year :</strong> </font></label>
-            <select name="Year">
-                <option value = unknown> unknown</option>
-                <?php     
-                    for($i=2009; $i<2023; $i++)
-                        echo"<option value = ".$i.">".$i."</option>";
-                ?>
-            </select>
-        </div><br/>
-
-        <div>
-            <label><font size="3"> <strong>Price :</strong> </font></label>
-            <input type="text" name="Price"><br/>
-        </div><br/>
-        <!-- submit -->
-        <div>
-            <input type="submit" value="Search">
+	<body>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;">
+            <div class="container-fluid">
+                <div class="col-3">
+                    <a class="navbar-brand" href="/index.php">
+                        <img src="/asset/a.ico" alt="Book icon" width="30" height="24">
+                        圖書借閱系統
+                    </a>
+                </div> 
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/signIn/userSignIn.php">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/signUp/usersignUp.php">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/adminSignIn.php">Admin</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row mb-5 mt-3">
+                <div class="col"></div>
+                <div class="col">
+                    <h1>Admin Page</h1>
+                </div>
+                <div class="col"></div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col">
+                    <button class="btn btn-warning" onclick="loadCRUDForm('search')">search</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-warning" onclick="loadCRUDForm('insert')">insert</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-warning" onclick="loadCRUDForm('update')">update</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-warning" onclick="loadCRUDForm('delete')">delete</button>
+                </div>
+                </div>
+            </div>
+            <div id="formBlock"></div>
         </div>
-    </form>
-    <hr>
-    <!-- Insert -->
-    <form  action=/admin/process/db_insert.php method="post">
-        <?php
-            echo "This is for insert.<br/>";
-        ?>
-        <div>
-            <label><font size="3"> <strong>Book_ID :</strong> </font></label>
-            <input type="text" name="Book_ID" />
-        </div><br/>
         
-        <div>
-            <label><font size="3"> <strong>BookName :</strong> </font></label>
-            <input type="text" name="BookName"><br/>
-        </div><br/>
-
-        <div>
-            <label><font size="3"> <strong>Author :</strong> </font></label>
-            <input type="text" name="Author"><br/>
-        </div><br/>
-        <div>
-            <label><font size="3"> <strong>Status :</strong> </font></label>
-            <select name="Status">
-                <option value = "available">available</option>
-                <option value = "issued">issued</option>
-            </select>
-        </div><br/>
-        
-        <div>
-            <label><font size="3"> <strong>Year :</strong> </font></label>
-            <select name="Year">
-                <?php     
-                    for($i=2009; $i<2023; $i++)
-                        echo"<option value = ".$i.">".$i."</option>";
-                ?>
-            </select>
-        </div><br/>
-
-        <div>
-            <label><font size="3"> <strong>Price :</strong> </font></label>
-            <input type="text" name="Price"><br/>
-        </div><br/>
-        <!-- submit -->
-        <div>
-            <input type="submit" value="Insert">
-        </div>
-    </form>
-    <hr>
-    <!-- Update -->
-    <form  action=/admin/process/db_update.php method="post">
-        
-        <?php
-            echo "This is for update.<br/>";
-        ?>
-                <div>
-            <label><font size="3"> <strong>Book_ID :</strong> </font></label>
-            <input type="text" name="Book_ID" />
-        </div><br/>
-        
-        <div>
-            <label><font size="3"> <strong>BookName :</strong> </font></label>
-            <input type="text" name="BookName"><br/>
-        </div><br/>
-
-        <div>
-            <label><font size="3"> <strong>Author :</strong> </font></label>
-            <input type="text" name="Author"><br/>
-        </div><br/>
-        <div>
-            <label><font size="3"> <strong>Status :</strong> </font></label>
-            <select name="Status">
-                <option value = "available">available</option>
-                <option value = "issued">issued</option>
-            </select>
-        </div><br/>
-        
-        <div>
-            <label><font size="3"> <strong>Year :</strong> </font></label>
-            <select name="Year">
-                <?php     
-                    for($i=2009; $i<2023; $i++)
-                        echo"<option value = ".$i.">".$i."</option>";
-                ?>
-            </select>
-        </div><br/>
-
-        <div>
-            <label><font size="3"> <strong>Price :</strong> </font></label>
-            <input type="text" name="Price"><br/>
-        </div><br/>
-        <!-- submit -->
-        <div>
-            <input type="submit" value="Update">
-        </div>
-    </form>
-    <hr>
-    <!-- Delete -->
-    <form  action=/admin/process/db_delete.php method="post">
-        
-        <?php
-            echo "This is for delete.<br/>";
-        ?>
-        <div>
-            <label><font size="3"> <strong>Book_ID :</strong> </font></label>
-            <input type="text" name="Book_ID" />
-        </div><br/>
-        <!-- submit -->
-        <div>
-            <input type="submit" value="Delete">
-        </div>
-    </form>
-    <hr>
     <!-- change page -->
     <form  action=adminPage.php method="get">
         <div>
@@ -198,7 +91,7 @@
         else
             $page = $_GET["pageNumber"];
         echo"Now Page : $page<br/>";
-        echo"<table border='5'>
+        echo"<table class='table table-striped table-hover'>
         <tr>
             <th>Book_ID</th>
             <th>BookName</th>
@@ -227,5 +120,7 @@
             echo"</tr>";
         }
     ?>
+        <script src="../script/form.js"></script>
+        <script src="../script/admin.js"></script>
 	</body>	
 </html>
